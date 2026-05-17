@@ -192,7 +192,7 @@ tr:hover td { background: #f8fefe; }
       <div class="stat-card">
         <div class="stat-label">ממוצע ניקוד</div>
         <div class="stat-value" id="stat-avg-score">-</div>
-        <div class="stat-sub">מתוך 13 נקודות</div>
+        <div class="stat-sub">ממוצע ניקוד כולל</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">שאלה נטישה שכיחה</div>
@@ -226,7 +226,8 @@ tr:hover td { background: #f8fefe; }
               <th>טלפון</th>
               <th>מייל</th>
               <th>ציפורניים</th>
-              <th>רגל</th>
+              <th>מצב ציפורן</th>
+              <th>מקרה חמור</th>
               <th>משך</th>
               <th>ניסה</th>
               <th>אורח חיים</th>
@@ -304,16 +305,16 @@ function renderStats() {
 }
 
 function labelForScreen(id) {
-  const m = {'1':'ש׳1','2':'ש׳2','3':'ש׳3','4':'ש׳4','5':'ש׳5',
-    'info1':'מידע','7':'ש׳6','8':'ש׳7','info2':'מידע','9':'ש׳8',
-    '10':'ש׳9','11':'ש׳10','info3':'מידע','12':'ש׳11','13':'ש׳12','lead':'ש׳13'};
+  const m = {'1':'ש׳1','nail_color':'ש׳2','2':'ש׳3','3':'ש׳4','4':'ש׳5','5':'ש׳6',
+    'info1':'מידע','7':'ש׳7','8':'ש׳8','info2':'מידע','9':'ש׳9',
+    '10':'ש׳10','11':'ש׳11','info3':'מידע','12':'ש׳12','13':'ש׳13','lead':'ש׳14'};
   return m[id] || id;
 }
 
 // ── CHART ───────────────────────────────────────────
 function renderChart() {
-  const SCREENS = ['1','2','3','4','5','info1','7','8','info2','9','10','11','info3','12','13','lead'];
-  const LABELS  = ['ש1','ש2','ש3','ש4','ש5','מידע','ש6','ש7','מידע','ש8','ש9','ש10','מידע','ש11','ש12','ש13'];
+  const SCREENS = ['1','nail_color','2','3','4','5','info1','7','8','info2','9','10','11','info3','12','13','lead'];
+  const LABELS  = ['ש1','ש2','ש3','ש4','ש5','ש6','מידע','ש7','ש8','מידע','ש9','ש10','ש11','מידע','ש12','ש13','ש14'];
 
   let dropoff = {};
   try { dropoff = JSON.parse(localStorage.getItem('rnv_dropoff')||'{}'); } catch(e){}
@@ -381,8 +382,9 @@ function renderPage() {
       <td dir="ltr">${esc(l.phone)}</td>
       <td style="font-size:12px">${esc(l.email)||'—'}</td>
       <td>${esc(l.q1_nails)||'—'}</td>
-      <td>${{right:'ימין',left:'שמאל',both:'שתיים'}[l.q2_leg]||l.q2_leg||'—'}</td>
-      <td>${{' <1':'<שנה','<1':'<שנה','1-3':'1-3ש','3-5':'3-5ש','5+':'5+ש'}[l.q4_duration]||l.q4_duration||'—'}</td>
+      <td style="font-size:12px">${{light_yellow:'צהובה קלות',yellow_brown:'צהובה-חומה',dark_thick:'כהה+עבה',crumbling:'מתפוררת'}[l.q2_nail_color]||l.q2_nail_color||'—'}</td>
+      <td><span class="badge ${l.severe_case?'badge-9':'badge-yes'}">${l.severe_case?'כן':'לא'}</span></td>
+      <td>${{'<1':'<שנה','1-3':'1-3ש','3-5':'3-5ש','5+':'5+ש'}[l.q5_duration]||l.q5_duration||'—'}</td>
       <td>${tried.length ? tried.length+' טיפולים' : '—'}</td>
       <td style="font-size:12px">${esc(l.q10_lifestyle)||'—'}</td>
       <td><strong>${l.score||0}</strong></td>
@@ -404,13 +406,14 @@ function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'
 // ── CSV EXPORT ──────────────────────────────────────
 function exportCSV() {
   if (!allLeads.length) { alert('אין נתונים לייצוא'); return; }
-  const cols = ['timestamp','name','phone','email','q1_nails','q2_leg','q3_bothers',
-    'q4_duration','q5_goals','q7_tried','q8_knew_hard','q9_knew_filing',
-    'q10_lifestyle','q11_commitment','q12_summer','q13_guarantee',
-    'score','recommended','clicked_purchase'];
-  const headers = ['תאריך','שם','טלפון','מייל','ציפורניים','רגל','הפרעה','משך',
-    'מטרות','טיפולים שנוסו','ידע-קושי','ידע-פצירה','אורח חיים','מחויבות',
-    'קיץ','ערבות','ניקוד','חבילה','לחץ לרכישה'];
+  const cols = ['timestamp','name','phone','email','q1_nails','q2_nail_color','severe_case',
+    'q3_social_pain','q4_bothers','q5_duration','q6_goals','q7_tried',
+    'q8_knew_hard','q9_knew_filing','q10_lifestyle','q11_commitment',
+    'q12_barefoot','q13_guarantee','score','recommended','clicked_purchase'];
+  const headers = ['תאריך','שם','טלפון','מייל','ציפורניים','מצב ציפורן','מקרה חמור',
+    'כאב חברתי','הפרעה','משך','מטרות','טיפולים שנוסו',
+    'ידע-קושי','ידע-פצירה','אורח חיים','מחויבות',
+    'יחפ/ה','ערבות','ניקוד','חבילה','לחץ לרכישה'];
 
   const rows = [headers.join(',')];
   allLeads.forEach(l => {

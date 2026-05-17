@@ -273,6 +273,11 @@ input[type=range]::-webkit-slider-thumb {
 }
 .btn-purchase:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(10,110,110,0.42); }
 .guarantee { text-align: center; font-size: 13px; color: var(--gray); margin-top: 12px; }
+@keyframes pulse {
+  0%,100% { box-shadow: 0 4px 16px rgba(10,110,110,0.28), 0 0 0 0 rgba(10,110,110,0.4); }
+  50% { box-shadow: 0 4px 16px rgba(10,110,110,0.28), 0 0 0 10px rgba(10,110,110,0); }
+}
+.btn-pulse { animation: pulse 2s ease-in-out infinite; font-size: 20px; padding: 20px; }
 @media (max-width: 480px) {
   .q-text { font-size: 17px; }
   .main { padding: 14px 10px 80px; }
@@ -288,7 +293,7 @@ input[type=range]::-webkit-slider-thumb {
 
 <div class="progress-wrap" id="progressWrap" style="display:none">
   <div class="progress-label">
-    <span id="progressText">שאלה 1 מתוך 13</span>
+    <span id="progressText">שאלה 1 מתוך 14</span>
     <span id="progressPct">0%</span>
   </div>
   <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
@@ -300,22 +305,16 @@ input[type=range]::-webkit-slider-thumb {
 <div class="screen active" id="screen-intro">
   <div class="intro-hero">
     <div class="intro-emoji">🦶</div>
-    <div class="time-badge">⏱️ 3 דקות בלבד</div>
-    <div class="intro-title">גלה איזה פרוטוקול<br><span>מתאים לציפורניים שלך</span></div>
-    <div class="intro-sub">13 שאלות קצרות שיבנו עבורך המלצה אישית ומדויקת לשיקום הציפורניים</div>
-    <div class="intro-features">
-      <div class="intro-feature"><span class="intro-feature-icon">✓</span> אבחון מדויק לפי המצב שלך</div>
-      <div class="intro-feature"><span class="intro-feature-icon">✓</span> חבילה מומלצת בהתאמה אישית</div>
-      <div class="intro-feature"><span class="intro-feature-icon">✓</span> ללא התחייבות, ללא תשלום עכשיו</div>
-    </div>
-    <button class="btn-next" onclick="startQuiz()">התחל אבחון חינמי ←</button>
+    <div class="intro-title" style="font-size:27px;line-height:1.3">גלו למה כל הטיפולים שניסיתם לא עבדו.</div>
+    <div class="intro-sub">ענו על 2 דקות של שאלות — ותבינו בדיוק למה הפטרת עדיין שם.</div>
+    <button class="btn-next btn-pulse" onclick="startQuiz()">מה הדבר הזה?</button>
   </div>
 </div>
 
 <!-- ── Q1 ── -->
 <div class="screen" id="screen-1">
   <div class="q-card">
-    <div class="q-number">שאלה 1 מתוך 13</div>
+    <div class="q-number">שאלה 1 מתוך 14</div>
     <div class="q-text">כמה ציפורניים נגועות יש לך כרגע?</div>
     <div class="options" id="opts-1">
       <button class="option" data-value="1" data-score="1" onclick="selectSingle(this,1)">
@@ -329,23 +328,67 @@ input[type=range]::-webkit-slider-thumb {
       </button>
     </div>
   </div>
-  <button class="btn-next" id="next-1" disabled onclick="goNext(2)">המשך →</button>
+  <button class="btn-next" id="next-1" disabled onclick="goNext('nail_color')">המשך →</button>
+</div>
+
+<!-- ── Q1.5 — NAIL COLOR ── -->
+<div class="screen" id="screen-nail_color">
+  <div class="q-card">
+    <div class="q-number">שאלה 2 מתוך 14</div>
+    <div class="q-text">איך נראית הציפורן הנגועה שלך כרגע?</div>
+    <div class="options" id="opts-nail_color">
+      <button class="option" data-value="light_yellow" data-score="1" onclick="selectSingle(this,'nail_color')">
+        <span class="option-icon">🟡</span><span class="option-text">צהובה קצת — הציפורן עדיין רגילה בקשיחות</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="yellow_brown" data-score="2" onclick="selectSingle(this,'nail_color')">
+        <span class="option-icon">🟠</span><span class="option-text">צהובה-חומה ומתחילה להתעבות</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="dark_thick" data-score="3" onclick="selectSingle(this,'nail_color')">
+        <span class="option-icon">🔴</span><span class="option-text">צהובה-חומה כהה, עבה וקשה כמו אבן</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="crumbling" data-score="4" data-severe="true" onclick="selectSingle(this,'nail_color')">
+        <span class="option-icon">🚨</span><span class="option-text">מאוד עבה, מתפוררת, כמעט לא נראית ציפורן רגילה</span><span class="option-check"></span>
+      </button>
+    </div>
+  </div>
+  <button class="btn-next" id="next-nail_color" disabled onclick="goNext('analyzing')">המשך →</button>
+</div>
+
+<!-- ── ANALYZING SCREEN ── -->
+<div class="screen" id="screen-analyzing">
+  <div style="text-align:center;padding:60px 20px 40px">
+    <div style="font-size:56px;margin-bottom:20px">🔬</div>
+    <div style="font-size:20px;font-weight:700;color:var(--black);margin-bottom:28px">מנתח את הנתונים שלך...</div>
+    <div style="background:var(--border);border-radius:99px;height:10px;overflow:hidden;max-width:300px;margin:0 auto 14px">
+      <div id="analyzing-fill" style="height:100%;width:0%;background:linear-gradient(90deg,var(--brand),#0fa3a3);border-radius:99px;transition:width 0.05s linear"></div>
+    </div>
+    <div id="analyzing-pct" style="font-size:15px;font-weight:600;color:var(--brand)">0%</div>
+  </div>
 </div>
 
 <!-- ── Q2 ── -->
 <div class="screen" id="screen-2">
   <div class="q-card">
-    <div class="q-number">שאלה 2 מתוך 13</div>
-    <div class="q-text">באיזה רגל?</div>
-    <div class="yesno" id="opts-2">
-      <button class="option" data-value="right" data-score="0" onclick="selectSingle(this,2)">
-        <span>👟</span><span>רגל ימין</span><span class="option-check"></span>
+    <div class="q-number">שאלה 3 מתוך 14</div>
+    <div class="q-text">מה מתוך הדברים האלו קרה לך בגלל הפטרת? <span class="q-sub">(ניתן לבחור כמה)</span></div>
+    <div class="options" id="opts-2">
+      <button class="option multi" data-value="beach_avoid" onclick="selectMulti(this,2)">
+        <span class="option-icon">🏖️</span><span class="option-text">נמנעתי מללכת לים או לבריכה</span><span class="option-check"></span>
       </button>
-      <button class="option" data-value="left" data-score="0" onclick="selectSingle(this,2)">
-        <span>👟</span><span>רגל שמאל</span><span class="option-check"></span>
+      <button class="option multi" data-value="pedicure_stop" onclick="selectMulti(this,2)">
+        <span class="option-icon">💅</span><span class="option-text">הפסקתי ללכת לפדיקור</span><span class="option-check"></span>
       </button>
-      <button class="option" data-value="both" data-score="2" onclick="selectSingle(this,2)" style="grid-column:1/-1">
-        <span>👟👟</span><span>שתי הרגליים</span><span class="option-check"></span>
+      <button class="option multi" data-value="socks_sleep" onclick="selectMulti(this,2)">
+        <span class="option-icon">🧦</span><span class="option-text">ישנתי עם גרביים כדי שלא יראו</span><span class="option-check"></span>
+      </button>
+      <button class="option multi" data-value="beach_excuse" onclick="selectMulti(this,2)">
+        <span class="option-icon">🤐</span><span class="option-text">אמרתי "לא בא לי" כשהציעו ים</span><span class="option-check"></span>
+      </button>
+      <button class="option multi" data-value="partner_hide" onclick="selectMulti(this,2)">
+        <span class="option-icon">❤️</span><span class="option-text">הסתרתי את הרגליים מבן/בת הזוג</span><span class="option-check"></span>
+      </button>
+      <button class="option multi" data-value="gym_stop" onclick="selectMulti(this,2)">
+        <span class="option-icon">🏋️</span><span class="option-text">הפסקתי ללכת לחדר כושר</span><span class="option-check"></span>
       </button>
     </div>
   </div>
@@ -355,7 +398,7 @@ input[type=range]::-webkit-slider-thumb {
 <!-- ── Q3 ── -->
 <div class="screen" id="screen-3">
   <div class="q-card">
-    <div class="q-number">שאלה 3 מתוך 13</div>
+    <div class="q-number">שאלה 4 מתוך 14</div>
     <div class="q-text">עד כמה הפטרת מפריעה לחיי היומיום שלך?</div>
     <div class="slider-wrap">
       <div class="slider-value" id="sv-3">5</div>
@@ -370,7 +413,7 @@ input[type=range]::-webkit-slider-thumb {
 <!-- ── Q4 ── -->
 <div class="screen" id="screen-4">
   <div class="q-card">
-    <div class="q-number">שאלה 4 מתוך 13</div>
+    <div class="q-number">שאלה 5 מתוך 14</div>
     <div class="q-text">כמה זמן יש לך את הפטרת?</div>
     <div class="options" id="opts-4">
       <button class="option" data-value="<1" data-score="0" onclick="selectSingle(this,4)">
@@ -393,7 +436,7 @@ input[type=range]::-webkit-slider-thumb {
 <!-- ── Q5 ── -->
 <div class="screen" id="screen-5">
   <div class="q-card">
-    <div class="q-number">שאלה 5 מתוך 13</div>
+    <div class="q-number">שאלה 6 מתוך 14</div>
     <div class="q-text">מה הכי חשוב לך להשיג? <span class="q-sub">(ניתן לבחור כמה)</span></div>
     <div class="options" id="opts-5">
       <button class="option multi" data-value="beach" onclick="selectMulti(this,5)">
@@ -429,7 +472,7 @@ input[type=range]::-webkit-slider-thumb {
 <!-- ── Q7 ── -->
 <div class="screen" id="screen-7">
   <div class="q-card">
-    <div class="q-number">שאלה 6 מתוך 13</div>
+    <div class="q-number">שאלה 7 מתוך 14</div>
     <div class="q-text">מה ניסית עד היום? <span class="q-sub">(ניתן לבחור כמה)</span></div>
     <div class="options" id="opts-7">
       <button class="option multi" data-value="nail_polish" onclick="selectMulti(this,7)">
@@ -458,7 +501,7 @@ input[type=range]::-webkit-slider-thumb {
 <!-- ── Q8 ── -->
 <div class="screen" id="screen-8">
   <div class="q-card">
-    <div class="q-number">שאלה 7 מתוך 13</div>
+    <div class="q-number">שאלה 8 מתוך 14</div>
     <div class="q-text">האם ידעת שהציפורן הנגועה הופכת קשה כמו אבן וחוסמת את כל הטיפולים מלהגיע לפטרייה?</div>
     <div class="yesno" id="opts-8">
       <button class="option" data-value="no" onclick="selectSingle(this,8)">
@@ -485,7 +528,7 @@ input[type=range]::-webkit-slider-thumb {
 <!-- ── Q9 ── -->
 <div class="screen" id="screen-9">
   <div class="q-card">
-    <div class="q-number">שאלה 8 מתוך 13</div>
+    <div class="q-number">שאלה 9 מתוך 14</div>
     <div class="q-text">האם ידעת שפצירה רב-פעמית מחזירה את הפטרייה בחזרה בכל שיוף?</div>
     <div class="yesno" id="opts-9">
       <button class="option" data-value="no" onclick="selectSingle(this,9)">
@@ -502,23 +545,23 @@ input[type=range]::-webkit-slider-thumb {
 <!-- ── Q10 ── -->
 <div class="screen" id="screen-10">
   <div class="q-card">
-    <div class="q-number">שאלה 9 מתוך 13</div>
+    <div class="q-number">שאלה 10 מתוך 14</div>
     <div class="q-text">מה מתאר אותך הכי טוב?</div>
     <div class="options" id="opts-10">
       <button class="option" data-value="closed_shoes" data-score="0" onclick="selectSingle(this,10)">
-        <span class="option-icon">👞</span><span class="option-text">עובד עם נעליים סגורות כל היום</span><span class="option-check"></span>
+        <span class="option-icon">👞</span><span class="option-text">נועל/ת נעליים סגורות שעות ארוכות ביום</span><span class="option-check"></span>
       </button>
-      <button class="option" data-value="gym" data-score="0" onclick="selectSingle(this,10)">
-        <span class="option-icon">🏋️</span><span class="option-text">מתאמן בחדר כושר</span><span class="option-check"></span>
+      <button class="option" data-value="sport" data-score="0" onclick="selectSingle(this,10)">
+        <span class="option-icon">🏃</span><span class="option-text">עוסק/ת בספורט באופן קבוע</span><span class="option-check"></span>
       </button>
       <button class="option" data-value="pool" data-score="0" onclick="selectSingle(this,10)">
-        <span class="option-icon">🏊</span><span class="option-text">בריכה / ים באופן קבוע</span><span class="option-check"></span>
+        <span class="option-icon">🏊</span><span class="option-text">הולך/ת לבריכה או ים לעתים קרובות</span><span class="option-check"></span>
       </button>
       <button class="option" data-value="diabetic" data-score="1" onclick="selectSingle(this,10)">
-        <span class="option-icon">🩺</span><span class="option-text">סוכרתי או בעל מצב רפואי</span><span class="option-check"></span>
+        <span class="option-icon">🩺</span><span class="option-text">סוכרתי/ת או בעל/ת מצב רפואי</span><span class="option-check"></span>
       </button>
-      <button class="option" data-value="military" data-score="0" onclick="selectSingle(this,10)">
-        <span class="option-icon">🎖️</span><span class="option-text">חזרתי ממילואים / שירות צבאי</span><span class="option-check"></span>
+      <button class="option" data-value="none_above" data-score="0" onclick="selectSingle(this,10)">
+        <span class="option-icon">🤷</span><span class="option-text">לא אחד מאלה</span><span class="option-check"></span>
       </button>
     </div>
   </div>
@@ -528,7 +571,7 @@ input[type=range]::-webkit-slider-thumb {
 <!-- ── Q11 ── -->
 <div class="screen" id="screen-11">
   <div class="q-card">
-    <div class="q-number">שאלה 10 מתוך 13</div>
+    <div class="q-number">שאלה 11 מתוך 14</div>
     <div class="q-text">כמה אתה מוכן להתמיד בטיפול יומי של 5 דקות?</div>
     <div class="slider-wrap">
       <div class="slider-value" id="sv-11">7</div>
@@ -553,14 +596,20 @@ input[type=range]::-webkit-slider-thumb {
 <!-- ── Q12 ── -->
 <div class="screen" id="screen-12">
   <div class="q-card">
-    <div class="q-number">שאלה 11 מתוך 13</div>
-    <div class="q-text">האם הקיץ הקרוב חשוב לך — והיית רוצה להגיע אליו עם ציפורניים בריאות?</div>
-    <div class="yesno" id="opts-12">
-      <button class="option" data-value="yes" onclick="selectSingle(this,12)">
-        <span style="font-size:22px">☀️</span><span>כן, חשוב לי מאוד</span><span class="option-check"></span>
+    <div class="q-number">שאלה 12 מתוך 14</div>
+    <div class="q-text">מתי הייתה הפעם האחרונה שהלכת יחפ/ה בלי לחשוב על הציפורניים?</div>
+    <div class="options" id="opts-12">
+      <button class="option" data-value="dont_remember" data-score="3" onclick="selectSingle(this,12)">
+        <span class="option-icon">🤯</span><span class="option-text">לא זוכר/ת — כבר הרבה זמן</span><span class="option-check"></span>
       </button>
-      <button class="option" data-value="no" onclick="selectSingle(this,12)">
-        <span style="font-size:22px">🤔</span><span>לא בדחיפות</span><span class="option-check"></span>
+      <button class="option" data-value="few_months" data-score="1" onclick="selectSingle(this,12)">
+        <span class="option-icon">📅</span><span class="option-text">לפני כמה חודשים</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="over_year" data-score="2" onclick="selectSingle(this,12)">
+        <span class="option-icon">🗓️</span><span class="option-text">לפני שנה ויותר</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="never_comfortable" data-score="3" onclick="selectSingle(this,12)">
+        <span class="option-icon">😔</span><span class="option-text">מעולם לא הייתי בנוח עם זה</span><span class="option-check"></span>
       </button>
     </div>
   </div>
@@ -570,7 +619,7 @@ input[type=range]::-webkit-slider-thumb {
 <!-- ── Q13 ── -->
 <div class="screen" id="screen-13">
   <div class="q-card">
-    <div class="q-number">שאלה 12 מתוך 13</div>
+    <div class="q-number">שאלה 13 מתוך 14</div>
     <div class="q-text">אם היה פרוטוקול שמבטיח תוצאות ב-90 יום או החזר כסף מלא — היית מוכן לנסות?</div>
     <div class="yesno" id="opts-13">
       <button class="option" data-value="yes" onclick="selectSingle(this,13)">
@@ -587,7 +636,7 @@ input[type=range]::-webkit-slider-thumb {
 <!-- ── LEAD ── -->
 <div class="screen" id="screen-lead">
   <div class="q-card">
-    <div class="q-number">שאלה 13 מתוך 13</div>
+    <div class="q-number">שאלה 14 מתוך 14</div>
     <div class="q-text">כמעט סיימנו! לאן לשלוח את המלצת הפרוטוקול שלך?</div>
     <div class="form-group">
       <label class="form-label">שם פרטי *</label>
@@ -609,16 +658,20 @@ input[type=range]::-webkit-slider-thumb {
 <div class="screen" id="screen-results">
   <div class="result-header">
     <div class="result-emoji">🎯</div>
-    <div class="result-title">לפי התשובות שלך —<br>הנה הפרוטוקול המתאים לך</div>
+    <div class="result-title">ניתוח הפרוטוקול שלך מוכן</div>
   </div>
   <div class="result-summary" id="result-summary"></div>
+  <div id="result-explanation" style="font-size:14px;color:var(--gray);line-height:1.7;margin-bottom:18px;padding:0 4px"></div>
   <div class="packages" id="packages-container"></div>
+  <div style="background:linear-gradient(135deg,var(--brand),#0fa3a3);color:white;border-radius:14px;padding:16px 18px;text-align:center;font-size:15px;font-weight:700;margin-bottom:14px;box-shadow:var(--shadow)">
+    90 יום — תוצאות או החזר כסף מלא. בלי שאלות.
+  </div>
   <a id="purchase-btn"
      href="https://renova.co.il/products/4-%D7%911-%D7%94%D7%A4%D7%A8%D7%95%D7%98%D7%95%D7%A7%D7%95%D7%9C-%D7%A9%D7%9C-renova-%D7%9C%D7%A9%D7%99%D7%A7%D7%95%D7%9D-%D7%A4%D7%98%D7%A8%D7%AA-%D7%A6%D7%99%D7%A4%D7%95%D7%A8%D7%A0%D7%99%D7%99%D7%9D-%D7%AA%D7%95%D7%A6%D7%90%D7%95%D7%AA-%D7%90%D7%95-%D7%94%D7%97%D7%96%D7%A8-%D7%9B%D7%A1%D7%A4%D7%99-%D7%9E%D7%9C%D7%90"
      class="btn-purchase" target="_blank" onclick="trackPurchaseClick()">
-    לרכישה — לחצו כאן →
+    אני רוצה להתחיל את הפרוטוקול →
   </a>
-  <div class="guarantee">✓ אחריות 90 יום — תוצאות או החזר כסף מלא</div>
+  <div class="guarantee" style="margin-top:10px;font-weight:600;font-size:13px">מלאי מוגבל · משלוח חינם · 30% הנחה לזמן מוגבל</div>
 </div>
 
 </div><!-- /main -->
@@ -632,14 +685,15 @@ let S = {
   currentScreen: 'intro',
   answers: {},
   score: 0,
+  severe_case: false,
   startTime: Date.now(),
   leadData: null
 };
 
-const QMAP = { // screenId → display question number
-  '1':1,'2':2,'3':3,'4':4,'5':5,
-  'info1':5,'7':6,'8':7,'info2':7,'9':8,
-  '10':9,'11':10,'info3':10,'12':11,'13':12,'lead':13
+const QMAP = { // screenId → display question number (out of 14)
+  '1':1,'nail_color':2,'2':3,'3':4,'4':5,'5':6,
+  'info1':6,'7':7,'8':8,'info2':8,'9':9,
+  '10':10,'11':11,'info3':11,'12':12,'13':13,'lead':14
 };
 
 const SLIDER_LABELS = {
@@ -679,16 +733,33 @@ function goNext(next) {
   const cur = S.currentScreen;
   track('q_answered', {q: cur, a: JSON.stringify(S.answers[cur] || S.answers[next] || '')});
   dropoff(cur);
-  show(String(next));
+  if (String(next) === 'analyzing') {
+    show('analyzing');
+    runAnalyzing();
+  } else {
+    show(String(next));
+  }
+}
+
+function runAnalyzing() {
+  const fill = document.getElementById('analyzing-fill');
+  const pct  = document.getElementById('analyzing-pct');
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += 100/60; // 3 seconds at 20fps
+    if (progress >= 100) { progress = 100; clearInterval(interval); setTimeout(()=>show('2'), 200); }
+    fill.style.width = Math.min(progress,100).toFixed(1)+'%';
+    pct.textContent  = Math.min(Math.round(progress),100)+'%';
+  }, 50);
 }
 
 function updateProgress(id) {
   const n = QMAP[id];
   if (!n) return;
-  const pct = Math.round(n/13*100);
+  const pct = Math.round(n/14*100);
   document.getElementById('progressFill').style.width = pct+'%';
   document.getElementById('progressPct').textContent = pct+'%';
-  document.getElementById('progressText').textContent = 'שאלה '+n+' מתוך 13';
+  document.getElementById('progressText').textContent = 'שאלה '+n+' מתוך 14';
 }
 
 // ── ANSWER HANDLERS ─────────────────────────────────
@@ -696,6 +767,7 @@ function selectSingle(el, q) {
   el.closest('.options,.yesno').querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
   el.classList.add('selected');
   S.answers[q] = { value: el.dataset.value, score: +(el.dataset.score||0) };
+  if (q === 'nail_color') S.severe_case = el.dataset.severe === 'true';
   recalc();
   const nb = document.getElementById('next-'+q);
   if (nb) nb.disabled = false;
@@ -732,7 +804,7 @@ function updateSlider(q, v) {
 // ── SCORING ─────────────────────────────────────────
 function recalc() {
   let t = 0;
-  [1,2,4,10].forEach(q=>{ if(S.answers[q]) t += S.answers[q].score||0; });
+  [1,'nail_color',4,10,12].forEach(q=>{ if(S.answers[q]) t += S.answers[q].score||0; });
   if (S.answers[7]) t += S.answers[7].score||0;
   S.score = t;
   save();
@@ -741,9 +813,30 @@ function recalc() {
 
 function getRec() {
   const s = recalc();
-  if (s<=5)  return {months:3, price:279, monthly:93,  label:'3 חודשים', tag:''};
-  if (s<=9)  return {months:6, price:439, monthly:73,  label:'6 חודשים', tag:'הכי פופולרי'};
-  return          {months:9, price:499, monthly:55,  label:'9 חודשים', tag:'הכי משתלם'};
+  const nails   = S.answers[1]?.value || '';
+  const dur     = S.answers[4]?.value || '';
+  const tried   = (S.answers[7]?.values||[]).filter(v=>v!=='nothing');
+  const nailColor = S.answers['nail_color']?.value || '';
+
+  // 3 months: only mild cases
+  if (
+    s <= 3 &&
+    nails === '1' &&
+    dur === '<1' &&
+    nailColor === 'light_yellow'
+  ) return {months:3, price:279, monthly:93, label:'3 חודשים', tag:''};
+
+  // 9 months: severe / chronic
+  if (
+    s >= 8 ||
+    S.severe_case ||
+    dur === '5+' ||
+    tried.length >= 3 ||
+    nails === '4+'
+  ) return {months:9, price:499, monthly:55, label:'9 חודשים', tag:'הכי משתלם'};
+
+  // 6 months: default middle
+  return {months:6, price:439, monthly:73, label:'6 חודשים', tag:'הכי פופולרי'};
 }
 
 // ── LEAD ────────────────────────────────────────────
@@ -766,34 +859,51 @@ function buildResults() {
   const rec = getRec();
   const nails    = S.answers[1]?.value || '?';
   const dur      = S.answers[4]?.value || '?';
+  const nailColor= S.answers['nail_color']?.value || '';
   const tried    = (S.answers[7]?.values||[]).filter(v=>v!=='nothing');
-  const nailTxt  = {1:'ציפורן אחת','2-3':'2–3 ציפורניים','4+':'4 ציפורניים ומעלה'}[nails] || nails;
+  const nailTxt  = {'1':'ציפורן אחת','2-3':'2–3 ציפורניים','4+':'4 ציפורניים ומעלה'}[nails] || nails;
   const durTxt   = {'<1':'פחות משנה','1-3':'1–3 שנים','3-5':'3–5 שנים','5+':'יותר מ-5 שנים'}[dur] || dur;
+  const colorTxt = {'light_yellow':'צהובה קלות','yellow_brown':'צהובה-חומה ומתעבה','dark_thick':'כהה ועבה מאוד','crumbling':'עבה ומתפוררת'}[nailColor] || '';
 
   let summary = `ראינו שיש לך פטרת ב-<strong>${nailTxt}</strong> שנמשכת <strong>${durTxt}</strong>`;
-  if (tried.length>0) summary += `, וניסית כבר <strong>${tried.length} טיפולים</strong> שלא עבדו`;
-  summary += `. לפי זה, הפרוטוקול המומלץ עבורך הוא <strong>חבילת ${rec.label}</strong>.`;
+  if (colorTxt) summary += `, כשהציפורן <strong>${colorTxt}</strong>`;
+  if (tried.length>0) summary += `. ניסית כבר <strong>${tried.length} טיפולים</strong> שלא עבדו`;
+  summary += `. לפי הנתונים, הפרוטוקול המומלץ עבורך הוא <strong>שיקום מלא של ${rec.label}</strong>.`;
   document.getElementById('result-summary').innerHTML = summary;
 
-  const pkgs = [
+  const explanations = {
+    3: 'המקרה שלך מוקדם יחסית. 3 חודשים של פרוטוקול עקבי יספיקו.',
+    6: 'ציפורן רגל לוקחת 6–9 חודשים להתחלף לגמרי. הפסקה מוקדמת גורמת לפטרת לחזור מהשורש.',
+    9: 'במקרים כמו שלך, שנמשכים זמן רב, צריך מחזור טיפול מלא כדי לנקות את הציפורן עד השורש ולמנוע חזרה.'
+  };
+  document.getElementById('result-explanation').textContent = explanations[rec.months];
+
+  const allPkgs = [
     {months:3,price:279,monthly:93,label:'3 חודשים',tag:''},
     {months:6,price:439,monthly:73,label:'6 חודשים',tag:'הכי פופולרי'},
     {months:9,price:499,monthly:55,label:'9 חודשים',tag:'הכי משתלם'}
   ];
 
-  document.getElementById('packages-container').innerHTML = pkgs.map(p => {
-    const isRec = p.months===rec.months;
+  // Recommended first, then the other two smaller
+  const recommended = allPkgs.find(p=>p.months===rec.months);
+  const others      = allPkgs.filter(p=>p.months!==rec.months);
+
+  const renderPkg = (p, isRec) => {
     const badges = [];
-    if (isRec)       badges.push('<span class="pkg-badge recommended-badge">✓ מומלץ עבורך</span>');
+    if (isRec) badges.push('<span class="pkg-badge recommended-badge">✓ מומלץ עבורך</span>');
     if (p.tag==='הכי פופולרי') badges.push('<span class="pkg-badge popular">🔥 הכי פופולרי</span>');
     if (p.tag==='הכי משתלם')   badges.push('<span class="pkg-badge value">💚 הכי משתלם</span>');
-    return `<div class="package${isRec?' recommended':''}">
+    const smallStyle = isRec ? '' : 'opacity:0.72;transform:scale(0.96);transform-origin:top center';
+    return `<div class="package${isRec?' recommended':''}" style="${smallStyle}">
       ${badges.length ? '<div class="pkg-badges">'+badges.join('')+'</div>' : ''}
-      <div class="package-name">פרוטוקול ${p.label}</div>
+      <div class="package-name" style="${isRec?'':'font-size:15px'}">פרוטוקול ${p.label}</div>
       <div class="package-price">${p.monthly}₪ לחודש</div>
-      <div class="package-total">${p.price}₪ סה"כ</div>
+      <div class="package-total" style="${isRec?'':'font-size:20px'}">${p.price}₪ סה"כ</div>
     </div>`;
-  }).join('');
+  };
+
+  document.getElementById('packages-container').innerHTML =
+    renderPkg(recommended, true) + others.map(p=>renderPkg(p,false)).join('');
 }
 
 // ── SHEETS ──────────────────────────────────────────
@@ -805,16 +915,18 @@ function sendToSheets() {
     phone: S.leadData?.phone||'',
     email: S.leadData?.email||'',
     q1_nails:        S.answers[1]?.value||'',
-    q2_leg:          S.answers[2]?.value||'',
-    q3_bothers:      S.answers[3]?.value||'',
-    q4_duration:     S.answers[4]?.value||'',
-    q5_goals:        (S.answers[5]?.values||[]).join(', '),
+    q2_nail_color:   S.answers['nail_color']?.value||'',
+    severe_case:     S.severe_case||false,
+    q3_social_pain:  (S.answers[2]?.values||[]).join(', '),
+    q4_bothers:      S.answers[3]?.value||'',
+    q5_duration:     S.answers[4]?.value||'',
+    q6_goals:        (S.answers[5]?.values||[]).join(', '),
     q7_tried:        (S.answers[7]?.values||[]).join(', '),
     q8_knew_hard:    S.answers[8]?.value||'',
     q9_knew_filing:  S.answers[9]?.value||'',
     q10_lifestyle:   S.answers[10]?.value||'',
     q11_commitment:  S.answers[11]?.value||'',
-    q12_summer:      S.answers[12]?.value||'',
+    q12_barefoot:    S.answers[12]?.value||'',
     q13_guarantee:   S.answers[13]?.value||'',
     score:           S.score,
     recommended:     rec.label,
