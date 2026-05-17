@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Renova — גלה את הפרוטוקול המתאים לך</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --brand: #0a6e6e;
+  --brand-dark: #085858;
+  --brand-light: #e8f5f5;
+  --white: #ffffff;
+  --black: #1a1a1a;
+  --gray: #666;
+  --border: #e0e0e0;
+  --radius: 14px;
+  --shadow: 0 4px 24px rgba(10,110,110,0.10);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Heebo', sans-serif;
+  background: #f0f7f7;
+  color: var(--black);
+  direction: rtl;
+  min-height: 100vh;
+  font-size: 16px;
+}
+.header {
+  background: var(--white);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2px solid var(--brand);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.logo { font-size: 24px; font-weight: 900; color: var(--brand); letter-spacing: -0.5px; }
+.progress-wrap {
+  background: var(--white);
+  padding: 10px 20px 14px;
+  position: sticky;
+  top: 54px;
+  z-index: 99;
+  border-bottom: 1px solid var(--border);
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--gray);
+  margin-bottom: 7px;
+  font-weight: 500;
+}
+.progress-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--brand), #0fa3a3);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+.main { max-width: 520px; margin: 0 auto; padding: 20px 14px 80px; }
+.screen { display: none; animation: fadeIn 0.3s ease; }
+.screen.active { display: block; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.q-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 26px 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+}
+.q-number { font-size: 11px; font-weight: 700; color: var(--brand); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.q-text { font-size: 19px; font-weight: 700; line-height: 1.5; color: var(--black); margin-bottom: 22px; }
+.q-sub { font-size: 13px; font-weight: 400; color: #888; }
+.options { display: flex; flex-direction: column; gap: 10px; }
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.18s;
+  font-size: 16px;
+  font-weight: 500;
+  background: var(--white);
+  width: 100%;
+  text-align: right;
+  direction: rtl;
+  font-family: 'Heebo', sans-serif;
+}
+.option:active { transform: scale(0.99); }
+.option:hover { border-color: var(--brand); background: var(--brand-light); }
+.option.selected { border-color: var(--brand); background: var(--brand-light); color: var(--brand-dark); }
+.option-icon { font-size: 20px; flex-shrink: 0; }
+.option-text { flex: 1; text-align: right; }
+.option-check {
+  width: 22px; height: 22px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s;
+}
+.option.selected .option-check { background: var(--brand); border-color: var(--brand); }
+.option.selected .option-check::after { content: '✓'; color: white; font-size: 13px; font-weight: 700; }
+.option.multi .option-check { border-radius: 6px; }
+.yesno { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.yesno .option { justify-content: center; text-align: center; padding: 18px 10px; font-size: 16px; font-weight: 700; flex-direction: column; gap: 6px; }
+.yesno .option .option-check { display: none; }
+.slider-wrap { padding: 4px 0 20px; }
+.slider-value { text-align: center; font-size: 44px; font-weight: 900; color: var(--brand); line-height: 1; margin-bottom: 4px; }
+.slider-value-label { text-align: center; font-size: 14px; color: var(--gray); margin-bottom: 16px; }
+input[type=range] {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 8px;
+  border-radius: 99px;
+  background: linear-gradient(to left, var(--brand) var(--pct, 50%), var(--border) var(--pct, 50%));
+  outline: none;
+  margin-bottom: 10px;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--brand);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(10,110,110,0.35);
+}
+.slider-labels { display: flex; justify-content: space-between; font-size: 12px; color: #aaa; }
+.info-card {
+  background: linear-gradient(135deg, var(--brand), #0fa3a3);
+  color: var(--white);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+.info-card .info-icon { font-size: 34px; margin-bottom: 12px; }
+.info-card p { font-size: 17px; font-weight: 600; line-height: 1.65; }
+.info-card .info-highlight {
+  background: rgba(255,255,255,0.18);
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin-top: 14px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+.btn-next {
+  width: 100%;
+  padding: 17px;
+  background: var(--brand);
+  color: var(--white);
+  border: none;
+  border-radius: 12px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 6px;
+  box-shadow: 0 4px 16px rgba(10,110,110,0.28);
+}
+.btn-next:hover { background: var(--brand-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(10,110,110,0.38); }
+.btn-next:disabled { background: #b0cccc; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-next:active { transform: scale(0.99); }
+.form-group { margin-bottom: 14px; }
+.form-label { display: block; font-size: 14px; font-weight: 600; color: var(--black); margin-bottom: 7px; }
+.form-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 16px;
+  direction: rtl;
+  outline: none;
+  transition: border-color 0.2s;
+  background: var(--white);
+}
+.form-input:focus { border-color: var(--brand); }
+.intro-hero { text-align: center; padding: 28px 0 20px; }
+.intro-emoji { font-size: 64px; margin-bottom: 14px; }
+.intro-title { font-size: 26px; font-weight: 900; color: var(--black); margin-bottom: 12px; line-height: 1.35; }
+.intro-title span { color: var(--brand); }
+.intro-sub { font-size: 16px; color: var(--gray); line-height: 1.65; margin-bottom: 24px; }
+.intro-features {
+  background: var(--brand-light);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 22px;
+  text-align: right;
+}
+.intro-feature { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 15px; font-weight: 500; }
+.intro-feature-icon { color: var(--brand); font-size: 18px; font-weight: 700; }
+.time-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--black);
+  color: var(--white);
+  padding: 7px 16px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+.result-header { text-align: center; margin-bottom: 22px; }
+.result-emoji { font-size: 44px; margin-bottom: 10px; }
+.result-title { font-size: 22px; font-weight: 800; color: var(--brand); line-height: 1.35; }
+.result-summary {
+  background: var(--brand-light);
+  border-radius: var(--radius);
+  padding: 18px;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--black);
+  margin-bottom: 18px;
+  border-right: 4px solid var(--brand);
+}
+.packages { display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px; }
+.package {
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 16px;
+  position: relative;
+}
+.package.recommended { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(10,110,110,0.10); }
+.pkg-badges { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+.pkg-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+.pkg-badge.popular { background: #fff3e0; color: #e65100; }
+.pkg-badge.recommended-badge { background: var(--brand); color: white; }
+.pkg-badge.value { background: #e8f5e9; color: #2e7d32; }
+.package-name { font-size: 18px; font-weight: 800; color: var(--black); }
+.package-price { font-size: 14px; color: var(--gray); margin-top: 3px; }
+.package-total { font-size: 26px; font-weight: 900; color: var(--brand); margin-top: 4px; }
+.btn-purchase {
+  width: 100%;
+  padding: 19px;
+  background: linear-gradient(135deg, var(--brand), #0fa3a3);
+  color: var(--white);
+  border: none;
+  border-radius: 12px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+  box-shadow: 0 6px 24px rgba(10,110,110,0.32);
+  transition: all 0.2s;
+}
+.btn-purchase:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(10,110,110,0.42); }
+.guarantee { text-align: center; font-size: 13px; color: var(--gray); margin-top: 12px; }
+@media (max-width: 480px) {
+  .q-text { font-size: 17px; }
+  .main { padding: 14px 10px 80px; }
+  .q-card { padding: 20px 14px; }
+  .intro-title { font-size: 23px; }
+  .yesno .option { font-size: 14px; padding: 16px 8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header"><div class="logo">RENOVA</div></div>
+
+<div class="progress-wrap" id="progressWrap" style="display:none">
+  <div class="progress-label">
+    <span id="progressText">שאלה 1 מתוך 13</span>
+    <span id="progressPct">0%</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+
+<div class="main">
+
+<!-- ── INTRO ── -->
+<div class="screen active" id="screen-intro">
+  <div class="intro-hero">
+    <div class="intro-emoji">🦶</div>
+    <div class="time-badge">⏱️ 3 דקות בלבד</div>
+    <div class="intro-title">גלה איזה פרוטוקול<br><span>מתאים לציפורניים שלך</span></div>
+    <div class="intro-sub">13 שאלות קצרות שיבנו עבורך המלצה אישית ומדויקת לשיקום הציפורניים</div>
+    <div class="intro-features">
+      <div class="intro-feature"><span class="intro-feature-icon">✓</span> אבחון מדויק לפי המצב שלך</div>
+      <div class="intro-feature"><span class="intro-feature-icon">✓</span> חבילה מומלצת בהתאמה אישית</div>
+      <div class="intro-feature"><span class="intro-feature-icon">✓</span> ללא התחייבות, ללא תשלום עכשיו</div>
+    </div>
+    <button class="btn-next" onclick="startQuiz()">התחל אבחון חינמי ←</button>
+  </div>
+</div>
+
+<!-- ── Q1 ── -->
+<div class="screen" id="screen-1">
+  <div class="q-card">
+    <div class="q-number">שאלה 1 מתוך 13</div>
+    <div class="q-text">כמה ציפורניים נגועות יש לך כרגע?</div>
+    <div class="options" id="opts-1">
+      <button class="option" data-value="1" data-score="1" onclick="selectSingle(this,1)">
+        <span class="option-icon">💅</span><span class="option-text">ציפורן אחת</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="2-3" data-score="2" onclick="selectSingle(this,1)">
+        <span class="option-icon">💅💅</span><span class="option-text">2–3 ציפורניים</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="4+" data-score="4" onclick="selectSingle(this,1)">
+        <span class="option-icon">💅💅💅</span><span class="option-text">4 ציפורניים ומעלה</span><span class="option-check"></span>
+      </button>
+    </div>
+  </div>
+  <button class="btn-next" id="next-1" disabled onclick="goNext(2)">המשך →</button>
+</div>
+
+<!-- ── Q2 ── -->
+<div class="screen" id="screen-2">
+  <div class="q-card">
+    <div class="q-number">שאלה 2 מתוך 13</div>
+    <div class="q-text">באיזה רגל?</div>
+    <div class="yesno" id="opts-2">
+      <button class="option" data-value="right" data-score="0" onclick="selectSingle(this,2)">
+        <span>👟</span><span>רגל ימין</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="left" data-score="0" onclick="selectSingle(this,2)">
+        <span>👟</span><span>רגל שמאל</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="both" data-score="2" onclick="selectSingle(this,2)" style="grid-column:1/-1">
+        <span>👟👟</span><span>שתי הרגליים</span><span class="option-check"></span>
+      </button>
+    </div>
+  </div>
+  <button class="btn-next" id="next-2" disabled onclick="goNext(3)">המשך →</button>
+</div>
+
+<!-- ── Q3 ── -->
+<div class="screen" id="screen-3">
+  <div class="q-card">
+    <div class="q-number">שאלה 3 מתוך 13</div>
+    <div class="q-text">עד כמה הפטרת מפריעה לחיי היומיום שלך?</div>
+    <div class="slider-wrap">
+      <div class="slider-value" id="sv-3">5</div>
+      <div class="slider-value-label" id="sl-3">מפריעה במידה בינונית</div>
+      <input type="range" min="1" max="10" value="5" id="slider-3" oninput="updateSlider(3,this.value)">
+      <div class="slider-labels"><span>מפריעה מאוד (10)</span><span>(1) בכלל לא</span></div>
+    </div>
+  </div>
+  <button class="btn-next" onclick="goNext(4)">המשך →</button>
+</div>
+
+<!-- ── Q4 ── -->
+<div class="screen" id="screen-4">
+  <div class="q-card">
+    <div class="q-number">שאלה 4 מתוך 13</div>
+    <div class="q-text">כמה זמן יש לך את הפטרת?</div>
+    <div class="options" id="opts-4">
+      <button class="option" data-value="<1" data-score="0" onclick="selectSingle(this,4)">
+        <span class="option-icon">📅</span><span class="option-text">פחות משנה</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="1-3" data-score="1" onclick="selectSingle(this,4)">
+        <span class="option-icon">📅</span><span class="option-text">1–3 שנים</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="3-5" data-score="2" onclick="selectSingle(this,4)">
+        <span class="option-icon">📅</span><span class="option-text">3–5 שנים</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="5+" data-score="4" onclick="selectSingle(this,4)">
+        <span class="option-icon">⏳</span><span class="option-text">יותר מ-5 שנים</span><span class="option-check"></span>
+      </button>
+    </div>
+  </div>
+  <button class="btn-next" id="next-4" disabled onclick="goNext(5)">המשך →</button>
+</div>
+
+<!-- ── Q5 ── -->
+<div class="screen" id="screen-5">
+  <div class="q-card">
+    <div class="q-number">שאלה 5 מתוך 13</div>
+    <div class="q-text">מה הכי חשוב לך להשיג? <span class="q-sub">(ניתן לבחור כמה)</span></div>
+    <div class="options" id="opts-5">
+      <button class="option multi" data-value="beach" onclick="selectMulti(this,5)">
+        <span class="option-icon">🏖️</span><span class="option-text">ללכת לים ולחוף בלי לחשוב על הרגליים</span><span class="option-check"></span>
+      </button>
+      <button class="option multi" data-value="sandals" onclick="selectMulti(this,5)">
+        <span class="option-icon">👡</span><span class="option-text">לנעול סנדלים בקיץ בחופשיות</span><span class="option-check"></span>
+      </button>
+      <button class="option multi" data-value="pedicure" onclick="selectMulti(this,5)">
+        <span class="option-icon">💆</span><span class="option-text">ללכת לפדיקור בלי להתבייש</span><span class="option-check"></span>
+      </button>
+      <button class="option multi" data-value="socks" onclick="selectMulti(this,5)">
+        <span class="option-icon">🧦</span><span class="option-text">לישון בלי גרביים</span><span class="option-check"></span>
+      </button>
+      <button class="option multi" data-value="partner" onclick="selectMulti(this,5)">
+        <span class="option-icon">❤️</span><span class="option-text">שבן/בת הזוג לא ישים לב</span><span class="option-check"></span>
+      </button>
+    </div>
+  </div>
+  <button class="btn-next" id="next-5" disabled onclick="goNext('info1')">המשך →</button>
+</div>
+
+<!-- ── INFO 1 ── -->
+<div class="screen" id="screen-info1">
+  <div class="info-card">
+    <div class="info-icon">🇮🇱</div>
+    <p>מעל <strong>3,800 ישראלים</strong> שהיו בדיוק במקום שלך כבר הצמיחו ציפורן חדשה ובריאה עם פרוטוקול Renova</p>
+    <div class="info-highlight">אנשים שניסו הכל וכבר ויתרו — ועכשיו הולכים לים בחופשיות</div>
+  </div>
+  <button class="btn-next" onclick="goNext(7)">המשך →</button>
+</div>
+
+<!-- ── Q7 ── -->
+<div class="screen" id="screen-7">
+  <div class="q-card">
+    <div class="q-number">שאלה 6 מתוך 13</div>
+    <div class="q-text">מה ניסית עד היום? <span class="q-sub">(ניתן לבחור כמה)</span></div>
+    <div class="options" id="opts-7">
+      <button class="option multi" data-value="nail_polish" onclick="selectMulti(this,7)">
+        <span class="option-icon">🧴</span><span class="option-text">לק טיפולי מבית מרקחת</span><span class="option-check"></span>
+      </button>
+      <button class="option multi" data-value="tea_tree" onclick="selectMulti(this,7)">
+        <span class="option-icon">🌿</span><span class="option-text">שמן עץ התה או פתרונות טבעיים</span><span class="option-check"></span>
+      </button>
+      <button class="option multi" data-value="pills" onclick="selectMulti(this,7)">
+        <span class="option-icon">💊</span><span class="option-text">כדורים מרופא עור</span><span class="option-check"></span>
+      </button>
+      <button class="option multi" data-value="laser" onclick="selectMulti(this,7)">
+        <span class="option-icon">🔆</span><span class="option-text">טיפולי לייזר</span><span class="option-check"></span>
+      </button>
+      <button class="option multi" data-value="medical_pedicure" onclick="selectMulti(this,7)">
+        <span class="option-icon">💅</span><span class="option-text">פדיקור רפואי</span><span class="option-check"></span>
+      </button>
+      <button class="option multi" data-value="nothing" onclick="selectMulti(this,7)">
+        <span class="option-icon">🤷</span><span class="option-text">לא ניסיתי כלום עדיין</span><span class="option-check"></span>
+      </button>
+    </div>
+  </div>
+  <button class="btn-next" id="next-7" disabled onclick="goNext(8)">המשך →</button>
+</div>
+
+<!-- ── Q8 ── -->
+<div class="screen" id="screen-8">
+  <div class="q-card">
+    <div class="q-number">שאלה 7 מתוך 13</div>
+    <div class="q-text">האם ידעת שהציפורן הנגועה הופכת קשה כמו אבן וחוסמת את כל הטיפולים מלהגיע לפטרייה?</div>
+    <div class="yesno" id="opts-8">
+      <button class="option" data-value="no" onclick="selectSingle(this,8)">
+        <span style="font-size:22px">😲</span><span>לא ידעתי</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="yes" onclick="selectSingle(this,8)">
+        <span style="font-size:22px">💡</span><span>כן, שמעתי</span><span class="option-check"></span>
+      </button>
+    </div>
+  </div>
+  <button class="btn-next" id="next-8" disabled onclick="goNext('info2')">המשך →</button>
+</div>
+
+<!-- ── INFO 2 ── -->
+<div class="screen" id="screen-info2">
+  <div class="info-card">
+    <div class="info-icon">🔬</div>
+    <p><strong>זו הסיבה שלק, שמן וכדורים לא הגיעו לפטרייה שלך.</strong></p>
+    <div class="info-highlight">Renova הוא הפרוטוקול היחיד שמרכך את הציפורן קודם (אוריאה 30%) — ורק אז מחסל את הפטרייה מבפנים. כמו לפתוח דלת לפני שנכנסים.</div>
+  </div>
+  <button class="btn-next" onclick="goNext(9)">הבנתי, המשך →</button>
+</div>
+
+<!-- ── Q9 ── -->
+<div class="screen" id="screen-9">
+  <div class="q-card">
+    <div class="q-number">שאלה 8 מתוך 13</div>
+    <div class="q-text">האם ידעת שפצירה רב-פעמית מחזירה את הפטרייה בחזרה בכל שיוף?</div>
+    <div class="yesno" id="opts-9">
+      <button class="option" data-value="no" onclick="selectSingle(this,9)">
+        <span style="font-size:22px">😱</span><span>לא! לא ידעתי</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="yes" onclick="selectSingle(this,9)">
+        <span style="font-size:22px">✅</span><span>כן, ידעתי</span><span class="option-check"></span>
+      </button>
+    </div>
+  </div>
+  <button class="btn-next" id="next-9" disabled onclick="goNext(10)">המשך →</button>
+</div>
+
+<!-- ── Q10 ── -->
+<div class="screen" id="screen-10">
+  <div class="q-card">
+    <div class="q-number">שאלה 9 מתוך 13</div>
+    <div class="q-text">מה מתאר אותך הכי טוב?</div>
+    <div class="options" id="opts-10">
+      <button class="option" data-value="closed_shoes" data-score="0" onclick="selectSingle(this,10)">
+        <span class="option-icon">👞</span><span class="option-text">עובד עם נעליים סגורות כל היום</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="gym" data-score="0" onclick="selectSingle(this,10)">
+        <span class="option-icon">🏋️</span><span class="option-text">מתאמן בחדר כושר</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="pool" data-score="0" onclick="selectSingle(this,10)">
+        <span class="option-icon">🏊</span><span class="option-text">בריכה / ים באופן קבוע</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="diabetic" data-score="1" onclick="selectSingle(this,10)">
+        <span class="option-icon">🩺</span><span class="option-text">סוכרתי או בעל מצב רפואי</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="military" data-score="0" onclick="selectSingle(this,10)">
+        <span class="option-icon">🎖️</span><span class="option-text">חזרתי ממילואים / שירות צבאי</span><span class="option-check"></span>
+      </button>
+    </div>
+  </div>
+  <button class="btn-next" id="next-10" disabled onclick="goNext(11)">המשך →</button>
+</div>
+
+<!-- ── Q11 ── -->
+<div class="screen" id="screen-11">
+  <div class="q-card">
+    <div class="q-number">שאלה 10 מתוך 13</div>
+    <div class="q-text">כמה אתה מוכן להתמיד בטיפול יומי של 5 דקות?</div>
+    <div class="slider-wrap">
+      <div class="slider-value" id="sv-11">7</div>
+      <div class="slider-value-label" id="sl-11">אני די ממושמע</div>
+      <input type="range" min="1" max="10" value="7" id="slider-11" oninput="updateSlider(11,this.value)">
+      <div class="slider-labels"><span>ממושמע מאוד (10)</span><span>(1) קשה לי</span></div>
+    </div>
+  </div>
+  <button class="btn-next" onclick="goNext('info3')">המשך →</button>
+</div>
+
+<!-- ── INFO 3 ── -->
+<div class="screen" id="screen-info3">
+  <div class="info-card">
+    <div class="info-icon">⏰</div>
+    <p><strong>5 דקות בערב בלבד.</strong> עובד בזמן שאתה ישן. אין צורך לשנות שגרה.</p>
+    <div class="info-highlight">רוב המשתמשים שלנו עושים את זה בזמן שצופים בטלוויזיה. פשוט, מהיר, ויעיל.</div>
+  </div>
+  <button class="btn-next" onclick="goNext(12)">המשך →</button>
+</div>
+
+<!-- ── Q12 ── -->
+<div class="screen" id="screen-12">
+  <div class="q-card">
+    <div class="q-number">שאלה 11 מתוך 13</div>
+    <div class="q-text">האם הקיץ הקרוב חשוב לך — והיית רוצה להגיע אליו עם ציפורניים בריאות?</div>
+    <div class="yesno" id="opts-12">
+      <button class="option" data-value="yes" onclick="selectSingle(this,12)">
+        <span style="font-size:22px">☀️</span><span>כן, חשוב לי מאוד</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="no" onclick="selectSingle(this,12)">
+        <span style="font-size:22px">🤔</span><span>לא בדחיפות</span><span class="option-check"></span>
+      </button>
+    </div>
+  </div>
+  <button class="btn-next" id="next-12" disabled onclick="goNext(13)">המשך →</button>
+</div>
+
+<!-- ── Q13 ── -->
+<div class="screen" id="screen-13">
+  <div class="q-card">
+    <div class="q-number">שאלה 12 מתוך 13</div>
+    <div class="q-text">אם היה פרוטוקול שמבטיח תוצאות ב-90 יום או החזר כסף מלא — היית מוכן לנסות?</div>
+    <div class="yesno" id="opts-13">
+      <button class="option" data-value="yes" onclick="selectSingle(this,13)">
+        <span style="font-size:22px">✅</span><span>כן, הייתי מנסה</span><span class="option-check"></span>
+      </button>
+      <button class="option" data-value="no" onclick="selectSingle(this,13)">
+        <span style="font-size:22px">💭</span><span>עדיין לא בטוח</span><span class="option-check"></span>
+      </button>
+    </div>
+  </div>
+  <button class="btn-next" id="next-13" disabled onclick="goNext('lead')">שאלה אחרונה →</button>
+</div>
+
+<!-- ── LEAD ── -->
+<div class="screen" id="screen-lead">
+  <div class="q-card">
+    <div class="q-number">שאלה 13 מתוך 13</div>
+    <div class="q-text">כמעט סיימנו! לאן לשלוח את המלצת הפרוטוקול שלך?</div>
+    <div class="form-group">
+      <label class="form-label">שם פרטי *</label>
+      <input type="text" class="form-input" id="lead-name" placeholder="הכנס שם פרטי" autocomplete="given-name">
+    </div>
+    <div class="form-group">
+      <label class="form-label">מספר טלפון *</label>
+      <input type="tel" class="form-input" id="lead-phone" placeholder="050-0000000" dir="ltr" style="text-align:right" autocomplete="tel">
+    </div>
+    <div class="form-group">
+      <label class="form-label">מייל <span style="font-weight:400;color:#888">(אופציונלי)</span></label>
+      <input type="email" class="form-input" id="lead-email" placeholder="example@email.com" dir="ltr" style="text-align:right" autocomplete="email">
+    </div>
+  </div>
+  <button class="btn-next" onclick="submitLead()">קבל את ההמלצה האישית שלי ←</button>
+</div>
+
+<!-- ── RESULTS ── -->
+<div class="screen" id="screen-results">
+  <div class="result-header">
+    <div class="result-emoji">🎯</div>
+    <div class="result-title">לפי התשובות שלך —<br>הנה הפרוטוקול המתאים לך</div>
+  </div>
+  <div class="result-summary" id="result-summary"></div>
+  <div class="packages" id="packages-container"></div>
+  <a id="purchase-btn"
+     href="https://renova.co.il/products/4-%D7%911-%D7%94%D7%A4%D7%A8%D7%95%D7%98%D7%95%D7%A7%D7%95%D7%9C-%D7%A9%D7%9C-renova-%D7%9C%D7%A9%D7%99%D7%A7%D7%95%D7%9D-%D7%A4%D7%98%D7%A8%D7%AA-%D7%A6%D7%99%D7%A4%D7%95%D7%A8%D7%A0%D7%99%D7%99%D7%9D-%D7%AA%D7%95%D7%A6%D7%90%D7%95%D7%AA-%D7%90%D7%95-%D7%94%D7%97%D7%96%D7%A8-%D7%9B%D7%A1%D7%A4%D7%99-%D7%9E%D7%9C%D7%90"
+     class="btn-purchase" target="_blank" onclick="trackPurchaseClick()">
+    לרכישה — לחצו כאן →
+  </a>
+  <div class="guarantee">✓ אחריות 90 יום — תוצאות או החזר כסף מלא</div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ── CONFIG ──────────────────────────────────────────
+const APPS_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+// ── STATE ───────────────────────────────────────────
+let S = {
+  currentScreen: 'intro',
+  answers: {},
+  score: 0,
+  startTime: Date.now(),
+  leadData: null
+};
+
+const QMAP = { // screenId → display question number
+  '1':1,'2':2,'3':3,'4':4,'5':5,
+  'info1':5,'7':6,'8':7,'info2':7,'9':8,
+  '10':9,'11':10,'info3':10,'12':11,'13':12,'lead':13
+};
+
+const SLIDER_LABELS = {
+  3:  ['','בקושי','קצת','קצת','במידה בינונית','במידה בינונית','מפריעה','מפריעה','מפריעה הרבה','מאוד','מאוד'],
+  11: ['','קשה מאוד','קשה','קשה','לפעמים','לפעמים','לרוב כן','די ממושמע','די ממושמע','מאוד ממושמע','מאוד ממושמע']
+};
+
+// ── PERSIST ─────────────────────────────────────────
+function save() {
+  try { localStorage.setItem('rnv_q', JSON.stringify(S)); } catch(e){}
+}
+function load() {
+  try {
+    const d = JSON.parse(localStorage.getItem('rnv_q')||'null');
+    if (d && Date.now()-d.startTime < 86400000) S = {...S,...d};
+  } catch(e){}
+}
+
+// ── NAVIGATION ──────────────────────────────────────
+function startQuiz() {
+  S.startTime = Date.now();
+  document.getElementById('progressWrap').style.display = 'block';
+  show('1');
+  track('quiz_started');
+}
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('screen-'+id);
+  if (el) { el.classList.add('active'); window.scrollTo({top:0,behavior:'smooth'}); }
+  S.currentScreen = id;
+  updateProgress(id);
+  save();
+}
+
+function goNext(next) {
+  const cur = S.currentScreen;
+  track('q_answered', {q: cur, a: JSON.stringify(S.answers[cur] || S.answers[next] || '')});
+  dropoff(cur);
+  show(String(next));
+}
+
+function updateProgress(id) {
+  const n = QMAP[id];
+  if (!n) return;
+  const pct = Math.round(n/13*100);
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressPct').textContent = pct+'%';
+  document.getElementById('progressText').textContent = 'שאלה '+n+' מתוך 13';
+}
+
+// ── ANSWER HANDLERS ─────────────────────────────────
+function selectSingle(el, q) {
+  el.closest('.options,.yesno').querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  S.answers[q] = { value: el.dataset.value, score: +(el.dataset.score||0) };
+  recalc();
+  const nb = document.getElementById('next-'+q);
+  if (nb) nb.disabled = false;
+  save();
+  if (el.closest('.yesno')) setTimeout(()=>{ const b=document.getElementById('next-'+q); if(b)b.click(); }, 420);
+}
+
+function selectMulti(el, q) {
+  el.classList.toggle('selected');
+  const sel = [...el.closest('.options').querySelectorAll('.option.selected')].map(o=>o.dataset.value);
+  if (!S.answers[q]) S.answers[q] = {values:[], score:0};
+  S.answers[q].values = sel;
+  if (q===7) {
+    const real = sel.filter(v=>v!=='nothing');
+    S.answers[q].score = real.length>=3 ? 2 : 0;
+    recalc();
+  }
+  const nb = document.getElementById('next-'+q);
+  if (nb) nb.disabled = sel.length===0;
+  save();
+}
+
+function updateSlider(q, v) {
+  v = +v;
+  document.getElementById('sv-'+q).textContent = v;
+  const labels = SLIDER_LABELS[q];
+  if (labels) document.getElementById('sl-'+q).textContent = labels[v];
+  const el = document.getElementById('slider-'+q);
+  el.style.setProperty('--pct', ((v-1)/9*100)+'%');
+  S.answers[q] = { value: v };
+  save();
+}
+
+// ── SCORING ─────────────────────────────────────────
+function recalc() {
+  let t = 0;
+  [1,2,4,10].forEach(q=>{ if(S.answers[q]) t += S.answers[q].score||0; });
+  if (S.answers[7]) t += S.answers[7].score||0;
+  S.score = t;
+  save();
+  return t;
+}
+
+function getRec() {
+  const s = recalc();
+  if (s<=5)  return {months:3, price:279, monthly:93,  label:'3 חודשים', tag:''};
+  if (s<=9)  return {months:6, price:439, monthly:73,  label:'6 חודשים', tag:'הכי פופולרי'};
+  return          {months:9, price:499, monthly:55,  label:'9 חודשים', tag:'הכי משתלם'};
+}
+
+// ── LEAD ────────────────────────────────────────────
+function submitLead() {
+  const name  = document.getElementById('lead-name').value.trim();
+  const phone = document.getElementById('lead-phone').value.trim();
+  const email = document.getElementById('lead-email').value.trim();
+  if (!name)  { alert('נא להזין שם פרטי'); return; }
+  if (!phone) { alert('נא להזין מספר טלפון'); return; }
+  S.leadData = {name,phone,email};
+  save();
+  buildResults();
+  show('results');
+  sendToSheets();
+  track('lead_submitted');
+}
+
+// ── RESULTS ─────────────────────────────────────────
+function buildResults() {
+  const rec = getRec();
+  const nails    = S.answers[1]?.value || '?';
+  const dur      = S.answers[4]?.value || '?';
+  const tried    = (S.answers[7]?.values||[]).filter(v=>v!=='nothing');
+  const nailTxt  = {1:'ציפורן אחת','2-3':'2–3 ציפורניים','4+':'4 ציפורניים ומעלה'}[nails] || nails;
+  const durTxt   = {'<1':'פחות משנה','1-3':'1–3 שנים','3-5':'3–5 שנים','5+':'יותר מ-5 שנים'}[dur] || dur;
+
+  let summary = `ראינו שיש לך פטרת ב-<strong>${nailTxt}</strong> שנמשכת <strong>${durTxt}</strong>`;
+  if (tried.length>0) summary += `, וניסית כבר <strong>${tried.length} טיפולים</strong> שלא עבדו`;
+  summary += `. לפי זה, הפרוטוקול המומלץ עבורך הוא <strong>חבילת ${rec.label}</strong>.`;
+  document.getElementById('result-summary').innerHTML = summary;
+
+  const pkgs = [
+    {months:3,price:279,monthly:93,label:'3 חודשים',tag:''},
+    {months:6,price:439,monthly:73,label:'6 חודשים',tag:'הכי פופולרי'},
+    {months:9,price:499,monthly:55,label:'9 חודשים',tag:'הכי משתלם'}
+  ];
+
+  document.getElementById('packages-container').innerHTML = pkgs.map(p => {
+    const isRec = p.months===rec.months;
+    const badges = [];
+    if (isRec)       badges.push('<span class="pkg-badge recommended-badge">✓ מומלץ עבורך</span>');
+    if (p.tag==='הכי פופולרי') badges.push('<span class="pkg-badge popular">🔥 הכי פופולרי</span>');
+    if (p.tag==='הכי משתלם')   badges.push('<span class="pkg-badge value">💚 הכי משתלם</span>');
+    return `<div class="package${isRec?' recommended':''}">
+      ${badges.length ? '<div class="pkg-badges">'+badges.join('')+'</div>' : ''}
+      <div class="package-name">פרוטוקול ${p.label}</div>
+      <div class="package-price">${p.monthly}₪ לחודש</div>
+      <div class="package-total">${p.price}₪ סה"כ</div>
+    </div>`;
+  }).join('');
+}
+
+// ── SHEETS ──────────────────────────────────────────
+function sendToSheets() {
+  const rec = getRec();
+  const payload = {
+    timestamp: new Date().toISOString(),
+    name:  S.leadData?.name||'',
+    phone: S.leadData?.phone||'',
+    email: S.leadData?.email||'',
+    q1_nails:        S.answers[1]?.value||'',
+    q2_leg:          S.answers[2]?.value||'',
+    q3_bothers:      S.answers[3]?.value||'',
+    q4_duration:     S.answers[4]?.value||'',
+    q5_goals:        (S.answers[5]?.values||[]).join(', '),
+    q7_tried:        (S.answers[7]?.values||[]).join(', '),
+    q8_knew_hard:    S.answers[8]?.value||'',
+    q9_knew_filing:  S.answers[9]?.value||'',
+    q10_lifestyle:   S.answers[10]?.value||'',
+    q11_commitment:  S.answers[11]?.value||'',
+    q12_summer:      S.answers[12]?.value||'',
+    q13_guarantee:   S.answers[13]?.value||'',
+    score:           S.score,
+    recommended:     rec.label,
+    clicked_purchase: false
+  };
+
+  saveLeadLocal(payload);
+
+  if (APPS_SCRIPT_URL && APPS_SCRIPT_URL!=='YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+    fetch(APPS_SCRIPT_URL, {method:'POST', body:JSON.stringify(payload)}).catch(()=>{});
+  }
+}
+
+function saveLeadLocal(payload) {
+  try {
+    const leads = JSON.parse(localStorage.getItem('rnv_leads')||'[]');
+    leads.push(payload);
+    localStorage.setItem('rnv_leads', JSON.stringify(leads));
+  } catch(e){}
+}
+
+function trackPurchaseClick() {
+  track('purchase_clicked', {pkg: getRec().label});
+  try {
+    const leads = JSON.parse(localStorage.getItem('rnv_leads')||'[]');
+    if (leads.length) { leads[leads.length-1].clicked_purchase = true; localStorage.setItem('rnv_leads',JSON.stringify(leads)); }
+  } catch(e){}
+}
+
+// ── ANALYTICS ───────────────────────────────────────
+function track(name, data={}) {
+  try {
+    const evs = JSON.parse(localStorage.getItem('rnv_events')||'[]');
+    evs.push({event:name, data, ts:Date.now(), session:S.startTime});
+    if (evs.length>2000) evs.splice(0, evs.length-2000);
+    localStorage.setItem('rnv_events', JSON.stringify(evs));
+  } catch(e){}
+  if (typeof gtag!=='undefined') gtag('event', name, data);
+}
+
+function dropoff(screenId) {
+  try {
+    const d = JSON.parse(localStorage.getItem('rnv_dropoff')||'{}');
+    d[screenId] = (d[screenId]||0)+1;
+    localStorage.setItem('rnv_dropoff', JSON.stringify(d));
+  } catch(e){}
+}
+
+// ── INIT ────────────────────────────────────────────
+load();
+updateSlider(3,  document.getElementById('slider-3').value);
+updateSlider(11, document.getElementById('slider-11').value);
+</script>
+</body>
+</html>
