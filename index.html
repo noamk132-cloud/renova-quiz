@@ -319,6 +319,34 @@ input[type=range]::-webkit-slider-thumb {
   border: none; font-family: 'Heebo', sans-serif;
 }
 .guarantee-red:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(192,57,43,0.45); }
+
+/* ── FAQ ACCORDION ── */
+.faq-wrap { margin-top: 32px; margin-bottom: 20px; }
+.faq-section-title { font-size: 18px; font-weight: 800; color: var(--black); margin-bottom: 16px; text-align: center; }
+.faq-item { background: var(--white); border-radius: 12px; margin-bottom: 10px; box-shadow: var(--shadow); overflow: hidden; }
+.faq-question {
+  width: 100%; padding: 18px 18px;
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; background: none; border: none;
+  font-family: 'Heebo', sans-serif; font-size: 16px; font-weight: 700;
+  color: var(--black); text-align: right; direction: rtl; gap: 10px;
+}
+.faq-question:hover { background: var(--brand-light); }
+.faq-icon { font-size: 18px; color: var(--brand); transition: transform 0.3s ease; flex-shrink: 0; }
+.faq-item.open .faq-icon { transform: rotate(180deg); }
+.faq-answer {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s ease;
+  padding: 0 18px; font-size: 14px; line-height: 1.8; color: #333;
+  direction: rtl; text-align: right;
+}
+.faq-answer.open { max-height: 3000px; padding: 0 18px 20px; }
+.faq-answer p { margin-bottom: 10px; }
+.faq-answer p:last-child { margin-bottom: 0; }
+.faq-step { background: var(--brand-light); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; }
+.faq-step-title { font-weight: 700; color: var(--brand-dark); font-size: 14px; margin-bottom: 4px; }
+.faq-step-text { font-size: 13px; color: #444; line-height: 1.7; }
+
 @media (max-width: 480px) {
   .q-text { font-size: 17px; }
   .main { padding: 14px 10px 80px; }
@@ -678,17 +706,11 @@ input[type=range]::-webkit-slider-thumb {
   <div class="result-summary" id="result-summary"></div>
   <div id="result-explanation" style="font-size:14px;color:var(--gray);line-height:1.7;margin-bottom:18px;padding:0 4px"></div>
 
-  <!-- Reviews slider -->
-  <div class="reviews-wrap">
-    <div class="reviews-track" id="reviews-track"></div>
-    <div class="review-dots" id="review-dots"></div>
-  </div>
-
-  <!-- Social proof badge -->
-  <div class="social-badge">⭐ מעל 3,800 ישראלים כבר ניסו ומרוצים</div>
-
   <!-- Single recommended package (clickable) -->
   <div id="packages-container"></div>
+
+  <!-- Social proof badge (below package) -->
+  <div class="social-badge" style="margin-bottom:18px">⭐ מעל 3,800 ישראלים כבר ניסו ומרוצים</div>
 
   <!-- Guarantee (red, clickable) -->
   <a id="guarantee-btn"
@@ -703,6 +725,81 @@ input[type=range]::-webkit-slider-thumb {
     אני רוצה להתחיל את הפרוטוקול →
   </a>
   <div class="guarantee" style="margin-top:10px;font-weight:600;font-size:13px">מלאי מוגבל · משלוח חינם · 30% הנחה לזמן מוגבל</div>
+
+  <!-- Reviews slider (bottom of page) -->
+  <div class="reviews-wrap" style="margin-top:32px">
+    <div class="reviews-track" id="reviews-track"></div>
+    <div class="review-dots" id="review-dots"></div>
+  </div>
+
+  <!-- FAQ section -->
+  <div class="faq-wrap">
+    <div class="faq-section-title">שאלות נפוצות</div>
+
+    <!-- FAQ 1 -->
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span>כלום לא עזר לי, מה שונה הפעם?</span>
+        <span class="faq-icon">▾</span>
+      </button>
+      <div class="faq-answer">
+        <p>רוב הטיפולים נכשלים מאותה סיבה: הם לא מצליחים לעבור את שכבת הציפורן הקשה. וכשאנחנו אומרים ״רוב הטיפולים״ — אנחנו מדברים על משחות, שמנים, כדורים, לק טיפולי, וכל מיני ״תרופות סבתא״ למינהם.</p>
+        <p>הסיבה: הפטרייה חיה <strong>מתחת</strong> לציפורן, והחומרים פשוט נשארים על פני השטח מבלי להגיע אליה.</p>
+        <p><strong>הפרוטוקול של Renova — היחיד שעובד בשיטת "חדירה בשלבים":</strong></p>
+        <div class="faq-step">
+          <div class="faq-step-title">שלב 1 — ריכוך הציפורן</div>
+          <div class="faq-step-text">האוריאה בריכוז 30% (הריכוז הגבוה ביותר ללא מרשם) מרככת את הציפורן הקשה ומאפשרת להסיר את השכבה המזוהמת בקלות.</div>
+        </div>
+        <div class="faq-step">
+          <div class="faq-step-title">שלב 2 — טיפול ממוקד</div>
+          <div class="faq-step-text">רק לאחר שהציפורן פתוחה לטיפול, החומצה האונדצילנית והתמציות הסיניות חודרות ישירות לעומק הפטרייה ומחסלות אותה מבפנים.</div>
+        </div>
+        <p><strong>בשורה התחתונה:</strong> הפעם אתם לא רק מורחים חומר — אתם מחדירים אותו למקום שבו הפטרייה באמת חיה. זו הסיבה שזה עובד גם כשאחרים נכשלו.</p>
+      </div>
+    </div>
+
+    <!-- FAQ 2 -->
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span>תוך כמה זמן רואים שינוי?</span>
+        <span class="faq-icon">▾</span>
+      </button>
+      <div class="faq-answer">
+        <p>חשוב להבין: זהו תהליך ביולוגי ולא קסם. התוצאות משתנות בהתאם לחומרת הזיהום ולקצב צמיחת הציפורן האישי, אך זהו הממוצע בקרב מי שמתמיד בפרוטוקול:</p>
+        <div class="faq-step">
+          <div class="faq-step-title">🕐 שבועיים — השינוי המכני</div>
+          <div class="faq-step-text">הציפורן העבה מתרככת משמעותית והופכת לדקה ואסתטית יותר. הלחץ בתוך הנעל יורד מיד.</div>
+        </div>
+        <div class="faq-step">
+          <div class="faq-step-title">📅 חודש–חודשיים — ניקוי הצבע</div>
+          <div class="faq-step-text">החומרים הפעילים מתחילים לחטא את מצע הציפורן. הגוון הצהוב והעכור מתחיל להתבהר.</div>
+        </div>
+        <div class="faq-step">
+          <div class="faq-step-title">📅 3–4 חודשים — קו הבריאות</div>
+          <div class="faq-step-text">בבסיס הציפורן מתחילה לצמוח ציפורן חדשה, ורודה ונקייה — הסימן המובהק שהטיפול הגיע לשורש.</div>
+        </div>
+        <div class="faq-step">
+          <div class="faq-step-title">📅 6–8 חודשים — שיקום מתקדם</div>
+          <div class="faq-step-text">מרבית הציפורן הנגועה כבר נגזרה והוחלפה בחדשה. הציפורן חוזרת למראה הטבעי והחזק שלה.</div>
+        </div>
+        <p><strong>למה אנחנו מתחייבים?</strong> 5 דקות בלבד מהבית — ואנחנו מתחייבים לתוצאות או 100% החזר כספי.</p>
+      </div>
+    </div>
+
+    <!-- FAQ 3 -->
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span>מה אם זה גם לא יעבוד לי?</span>
+        <span class="faq-icon">▾</span>
+      </button>
+      <div class="faq-answer">
+        <p>אנחנו כל כך בטוחים בשיטה שלנו, שאתם מקבלים <strong>90 ימי אחריות על התוצאות</strong>.</p>
+        <p>אם אחרי 3 חודשי טיפול עקבי לא ראיתם שיפור ויזואלי — תקבלו <strong>החזר כספי מלא, בלי שאלות</strong>.</p>
+        <p><strong>למה אנחנו עושים את זה?</strong><br>כי אנחנו לא רוצים לקבל תשלום מלקוח שלא עזרנו לו. המטרה שלנו היא לייצר תוצאות, לא רק למכור עוד מוצר.</p>
+      </div>
+    </div>
+
+  </div><!-- /faq-wrap -->
 </div>
 
 </div><!-- /main -->
@@ -1056,6 +1153,21 @@ function dropoff(screenId) {
     d[screenId] = (d[screenId]||0)+1;
     localStorage.setItem('rnv_dropoff', JSON.stringify(d));
   } catch(e){}
+}
+
+// ── FAQ ACCORDION ────────────────────────────────────
+function toggleFaq(btn) {
+  const item   = btn.closest('.faq-item');
+  const answer = item.querySelector('.faq-answer');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => {
+    i.classList.remove('open');
+    i.querySelector('.faq-answer').classList.remove('open');
+  });
+  if (!isOpen) {
+    item.classList.add('open');
+    answer.classList.add('open');
+  }
 }
 
 // ── INIT ────────────────────────────────────────────
