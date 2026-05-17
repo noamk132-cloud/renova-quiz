@@ -66,6 +66,12 @@ body { font-family: 'Heebo', sans-serif; background: #f0f7f7; color: var(--black
   border: 1px solid var(--border); border-radius: 8px;
   font-family: 'Heebo', sans-serif; font-size: 14px; cursor: pointer;
 }
+.btn-reset {
+  padding: 9px 16px; background: #c62828; color: var(--white);
+  border: none; border-radius: 8px;
+  font-family: 'Heebo', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer;
+}
+.btn-reset:hover { background: #b71c1c; }
 .dash-main { max-width: 1200px; margin: 0 auto; padding: 24px 20px 60px; }
 
 /* STATS */
@@ -172,6 +178,7 @@ tr:hover td { background: #f8fefe; }
     <div class="dash-logo">RENOVA — דשבורד</div>
     <div class="dash-actions">
       <button class="btn-export" onclick="exportCSV()">📥 ייצוא CSV</button>
+      <button class="btn-reset" onclick="resetDashboard()">🗑️ איפוס דשבורד</button>
       <button class="btn-logout" onclick="logout()">יציאה</button>
     </div>
   </div>
@@ -429,6 +436,19 @@ function exportCSV() {
   a.href = URL.createObjectURL(blob);
   a.download = 'renova_leads_'+new Date().toISOString().slice(0,10)+'.csv';
   a.click();
+}
+
+// ── RESET ───────────────────────────────────────────
+function resetDashboard() {
+  if (!confirm('בטוח שרוצה לאפס את כל הנתונים בדשבורד? הפעולה לא ניתנת לביטול.')) return;
+  localStorage.removeItem('rnv_leads');
+  localStorage.removeItem('rnv_dropoff');
+  localStorage.removeItem('rnv_events');
+  allLeads = [];
+  filteredLeads = [];
+  renderStats();
+  renderChart();
+  renderTable();
 }
 
 // ── INIT ────────────────────────────────────────────
